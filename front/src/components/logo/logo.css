@@ -1,0 +1,19 @@
+.logo {
+  box-sizing: border-box;
+  font-family: Roboto,sans-serif;
+  cursor: pointer;
+  color: #fff;
+  padding: 22px 20px;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 22px;
+}
+
+.logo-text {
+  font-size: 24px;
+  text-decoration: none;
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
