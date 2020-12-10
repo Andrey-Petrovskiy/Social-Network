@@ -1,10 +1,11 @@
-import logo from './logo.svg';
-import './App.css';
+import ContentContainer from './containers/content';
+import HeaderContainer from './containers/header';
 
 function App() {
   return (
-    <div className="App">
-      HiveMind
+    <div>
+      <HeaderContainer />
+      <ContentContainer />
     </div>
   );
 }
