@@ -1,11 +1,9 @@
-import ContentContainer from './containers/content';
-import HeaderContainer from './containers/header';
+import MainPage from './containers/main-page';
 
 function App() {
   return (
     <div>
-      <HeaderContainer />
-      <ContentContainer />
+      <MainPage />
     </div>
   );
 }

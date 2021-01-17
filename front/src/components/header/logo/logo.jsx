@@ -1,5 +1,5 @@
+import React from 'react';
 import './logo.css';
-// import NetworkLogo from '../../images/logo.jpg';
 
 function Logo() {
   return (
