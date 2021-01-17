@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { filePropType, userPropType, articlePropType } from '../../../user-prop-types';
+import { userPropType, articlePropType } from '../../../user-prop-types';
 
 function GreetingPage({ userData }) {
   const userCredentials = `${userData.firstName} ${userData.lastName}`;
@@ -18,17 +18,14 @@ function GreetingPage({ userData }) {
 
 GreetingPage.propTypes = {
   userData: PropTypes.shape({
-    id: PropTypes.number,
-    firstName: PropTypes.string,
-    lastName: PropTypes.string,
-    age: PropTypes.number,
-    avatar: PropTypes.shape({
-      fileId: PropTypes.number,
-      file: filePropType,
-    }),
+    userPropType,
     friends: PropTypes.arrayOf(userPropType),
     articles: PropTypes.arrayOf(articlePropType),
   }),
+};
+
+GreetingPage.defaultProps = {
+  userData: null,
 };
 
 export default GreetingPage;

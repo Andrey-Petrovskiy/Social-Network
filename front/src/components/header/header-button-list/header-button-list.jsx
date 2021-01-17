@@ -11,12 +11,12 @@ function HeaderButtonList({ handleTab, buttonData }) {
 }
 
 HeaderButtonList.propTypes = {
-  handleTab: PropTypes.func,
+  handleTab: PropTypes.func.isRequired,
   buttonData: PropTypes.arrayOf(
     PropTypes.shape({
-      key: PropTypes.number,
+      key: PropTypes.string.isRequired,
       label: PropTypes.string.isRequired,
-    })
+    }).isRequired
   ),
 };
 

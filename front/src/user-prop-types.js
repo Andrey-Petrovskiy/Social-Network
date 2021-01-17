@@ -33,4 +33,4 @@ const articlePropType = PropTypes.shape({
   likes: PropTypes.arrayOf(likePropType),
 });
 
-export { filePropType, userPropType, articlePropType };
+export { userPropType, articlePropType };

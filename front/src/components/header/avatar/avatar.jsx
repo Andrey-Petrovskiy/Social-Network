@@ -2,12 +2,9 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import './avatar.css';
 import UserAvatar from '../../../images/user-avatar.jpg';
-import AvatarDropdown from '../avatar-dropdown/avatar-dropdown';
 
 function Avatar({ username }) {
   const [display, setDisplay] = useState(false);
-
-  const dropdownDisplay = (display) => (display ? <AvatarDropdown /> : null);
 
   const toggleDropdown = (event) => {
     event.preventDefault();
@@ -18,13 +15,18 @@ function Avatar({ username }) {
     <div className="avatar">
       <img src={UserAvatar} alt="UserAvatar" className="avatar-image" onClick={toggleDropdown} />
       <span className="user-name">{username}</span>
-      {dropdownDisplay(display)}
+      {display ? (
+        <ul className="dropdown">
+          <li>Profile</li>
+          <li>Logout</li>
+        </ul>
+      ) : null}
     </div>
   );
 }
 
 Avatar.propTypes = {
-  username: PropTypes.string,
+  username: PropTypes.string.isRequired,
 };
 
 export default Avatar;

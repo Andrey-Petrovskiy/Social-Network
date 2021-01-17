@@ -11,8 +11,8 @@ function HeaderButton({ handleTab, label }) {
 }
 
 HeaderButton.propTypes = {
-  handleTab: PropTypes.func,
-  label: PropTypes.string,
+  handleTab: PropTypes.func.isRequired,
+  label: PropTypes.string.isRequired,
 };
 
 export default HeaderButton;
