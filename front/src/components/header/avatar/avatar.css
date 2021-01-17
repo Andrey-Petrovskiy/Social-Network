@@ -8,7 +8,7 @@
   height: 50px;
   border: 3px solid rgb(63, 63, 63);
   border-radius: 50%;
-	cursor: pointer;
+  cursor: pointer;
 }
 
 .user-name {
@@ -17,28 +17,23 @@
 }
 
 .dropdown {
-  display: none;
+  display: block;
   position: absolute;
   font-size: 18px;
-  padding: 0 1rem;
   margin: 0;
   line-height: 30px;
   padding: 15px 0;
   border-radius: 3px;
-  box-shadow: 0 5px 5px 0 rgba(0, 0, 0, 0.2); 
+  box-shadow: 0 5px 5px 0 rgba(0, 0, 0, 0.2);
 }
 
-.dropdown a {
+.dropdown li {
   padding: 0 1rem;
   display: block;
   color: #555;
   text-decoration: none;
-} 
-
-.dropdown a:hover {
-  background: #fafafa;
 }
 
-.dropdown-show {
-  display: block;
+.dropdown li:hover {
+  background: #fafafa;
 }
