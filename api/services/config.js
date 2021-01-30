@@ -16,6 +16,23 @@ class Config {
       },
     };
   }
+
+  static JWT() {
+    return {
+      secret: process.env.JWT_SECRET,
+      expiresIn: process.env.JWT_EXPIRES_IN,
+    };
+  }
+
+  static getMailer() {
+    return {
+      service: process.env.EMAIL_SERVICE,
+      auth: {
+        user: process.env.EMAIL_USERNAME,
+        pass: process.env.EMAIL_PASSWORD,
+      },
+    };
+  }
 }
 
 module.exports = Config;
