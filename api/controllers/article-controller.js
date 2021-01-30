@@ -1,9 +1,9 @@
 const catchAsync = require('./../errors/catch-async');
 const AppError = require('./../errors/app-error');
-const Article = require('./../db/article');
+const articleModel = require('../models/article-model');
 
-exports.getAllArticles = catchAsync(async (req, res, next) => {
-  const articles = await Article.findAll();
+const getAllArticles = catchAsync(async (req, res, next) => {
+  const articles = await articleModel.findAll();
 
   res.status(200).json({
     articles: articles.length,
@@ -13,21 +13,9 @@ exports.getAllArticles = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.createArticle = catchAsync(async (req, res, next) => {
-  const props = req.body;
-  const article = await Article.create(props);
-
-  res.status(201).json({
-    status: 'success',
-    data: {
-      article,
-    },
-  });
-});
-
-exports.getArticle = catchAsync(async (req, res, next) => {
+const getArticle = catchAsync(async (req, res, next) => {
   const id = req.params.id;
-  const article = await Article.findById(id);
+  const article = await articleModel.findById(id);
 
   if (!article) {
     return next(new AppError('No article found with this ID', 404));
@@ -41,10 +29,22 @@ exports.getArticle = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.updateArticle = catchAsync(async (req, res, next) => {
+const createArticle = catchAsync(async (req, res, next) => {
+  const props = req.body;
+  const article = await articleModel.create(props);
+
+  res.status(201).json({
+    status: 'success',
+    data: {
+      article,
+    },
+  });
+});
+
+const updateArticle = catchAsync(async (req, res, next) => {
   const props = req.body;
   const id = req.params.id;
-  const article = await Article.update(id, props);
+  const article = await articleModel.update(id, props);
 
   res.status(200).json({
     status: 'success',
@@ -54,12 +54,14 @@ exports.updateArticle = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.deleteArticle = catchAsync(async (req, res, next) => {
+const deleteArticle = catchAsync(async (req, res, next) => {
   const id = req.params.id;
-  await Article.remove(id);
+  await articleModel.remove(id);
 
   res.status(200).json({
     status: 'success',
     message: `Article ${id} deleted`,
   });
 });
+
+module.exports = { getAllArticles, getArticle, createArticle, updateArticle, deleteArticle };

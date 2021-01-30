@@ -1,8 +1,8 @@
 const router = require('express').Router();
 const {
   getAllArticles,
-  createArticle,
   getArticle,
+  createArticle,
   updateArticle,
   deleteArticle,
 } = require('../controllers/article-controller');
