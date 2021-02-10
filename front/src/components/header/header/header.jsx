@@ -5,7 +5,7 @@ import Avatar from '../avatar/avatar';
 import HeaderButtonList from '../header-button-list/header-button-list';
 import { articles, addArticle, profile } from '../../../variables/tabs';
 
-function Header({ handleTab, username }) {
+function Header({ username }) {
   const buttonData = [
     { key: '1', label: articles },
     { key: '2', label: addArticle },
@@ -14,7 +14,7 @@ function Header({ handleTab, username }) {
   return (
     <div className="header">
       <Logo />
-      <HeaderButtonList buttonData={buttonData} handleTab={handleTab} />
+      <HeaderButtonList buttonData={buttonData} />
       <Avatar username={username} />
     </div>
   );

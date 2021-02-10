@@ -1,17 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './header-button.css';
+import { Link } from 'react-router-dom';
 
-function HeaderButton({ handleTab, label }) {
+function HeaderButton({ label }) {
+  const link = label.toString().toLowerCase().replace(' ', '-');
+
   return (
-    <div className="header-btn" onClick={handleTab}>
-      <span className="header-btn-text">{label}</span>
-    </div>
+    <Link to={`/${link}`}>
+      <div className="header-btn">
+        <span className="header-btn-text">{label}</span>
+      </div>
+    </Link>
   );
 }
 
 HeaderButton.propTypes = {
-  handleTab: PropTypes.func.isRequired,
   label: PropTypes.string.isRequired,
 };
 

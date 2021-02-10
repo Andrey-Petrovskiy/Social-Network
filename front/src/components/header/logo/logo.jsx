@@ -1,12 +1,13 @@
 import React from 'react';
 import './logo.css';
+import { Link } from 'react-router-dom';
 
 function Logo() {
   return (
     <div className="logo">
-      <a href="./" style={{ textDecoration: 'none' }}>
+      <Link to="/">
         <span className="logo-text">inTouch</span>
-      </a>
+      </Link>
     </div>
   );
 }

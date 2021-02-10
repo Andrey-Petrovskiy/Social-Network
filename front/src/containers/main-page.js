@@ -5,9 +5,6 @@ import Content from '../components/content/content/content';
 import userData from '../user-data';
 
 function MainPage() {
-  const [tab, setTab] = useState(null);
-  const handleTab = (tabName) => () => setTab(tabName);
-
   const [username, setUsername] = useState(`${userData.firstName} ${userData.lastName}`);
   const handleUsername = (event) => {
     event.preventDefault();
@@ -17,8 +14,8 @@ function MainPage() {
   return (
     <>
       <ErrorBoundary>
-        <Header handleTab={handleTab} username={username} />
-        <Content handleUsername={handleUsername} tab={tab} userData={userData} />
+        <Header username={username} />
+        <Content handleUsername={handleUsername} userData={userData} />
       </ErrorBoundary>
     </>
   );
