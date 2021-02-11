@@ -29,17 +29,12 @@ function Content({ handleUsername, userData }) {
       <Route exact path="/articles" component={Articles} />
       <Route
         exact
-        path={[
-          '/users',
-          '/users/(\\d+)/(edit|avatar|file)?',
-          '/users/(\\d+)/avatar/(edit|delete)?',
-          '/users/(\\d+)/file/(\\d+)-(\\w{1,10})-:date(\\d{4})-(0[1-9]|1[0-2])-([0-2][0-9]|3[0-1]).(docx|jpeg|pdf|txt)/v.(\\d{1}).(\\d{1}).(\\d{1})',
-        ]}
+        path={['/users', '/users/(\\d+)/(edit|avatar|file)?', '/users/(\\d+)/avatar/(edit|delete)?']}
         render={() => <Profile handleUsername={handleUsername} />}
       />
       <Route
         exact
-        path="/date/(\d+)/file/(\d+)-(\w{1,10})-:year(\d{4})-:month(0[1-9]|1[0-2])-:day([0-2][0-9]|3[0-1]).(docx|jpeg|pdf|txt)/v.(\d{1}).(\d{1}).(\d{1})"
+        path="/users/(\d+)/file/(\d+)-(\w{1,10})-:year(\d{4})-:month(0[1-9]|1[0-2])-:day(0[1-9]|[1-2][0-9]|3[0-1]).(docx|jpeg|pdf|txt)/v.(\d{1}).(\d{1}).(\d{1})"
         component={DateCheck}
       />
     </Switch>
