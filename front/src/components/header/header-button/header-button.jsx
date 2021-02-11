@@ -4,7 +4,7 @@ import './header-button.css';
 import { Link } from 'react-router-dom';
 
 function HeaderButton({ label }) {
-  const link = label.toString().toLowerCase().replace(' ', '-');
+  const link = label.toLowerCase().replace(' ', '-');
 
   return (
     <Link to={`/${link}`}>
