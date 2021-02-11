@@ -2,16 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import HeaderButton from '../header-button/header-button';
 
-function HeaderButtonList({ handleTab, buttonData }) {
+function HeaderButtonList({ buttonData }) {
   const elements = buttonData.map((item) => {
-    return <HeaderButton {...item} handleTab={handleTab(item.label)} />;
+    return <HeaderButton {...item} />;
   });
 
   return <div>{elements}</div>;
 }
 
 HeaderButtonList.propTypes = {
-  handleTab: PropTypes.func.isRequired,
   buttonData: PropTypes.arrayOf(
     PropTypes.shape({
       key: PropTypes.string.isRequired,

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import './avatar.css';
 import UserAvatar from '../../../images/user-avatar.jpg';
+import { Link } from 'react-router-dom';
 
 function Avatar({ username }) {
   const [display, setDisplay] = useState(false);
@@ -17,8 +18,12 @@ function Avatar({ username }) {
       <span className="user-name">{username}</span>
       {display ? (
         <ul className="dropdown">
-          <li>Profile</li>
-          <li>Logout</li>
+          <Link to="/profile">
+            <li>Profile</li>
+          </Link>
+          <Link to="/login">
+            <li>Logout</li>
+          </Link>
         </ul>
       ) : null}
     </div>
