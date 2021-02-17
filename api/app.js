@@ -1,6 +1,5 @@
 const express = require('express');
 const knex = require('knex');
-const passport = require('passport');
 
 const DI = require('./services/di');
 const config = require('./services/config');
@@ -20,10 +19,6 @@ const app = express();
 
 app.use(express.json());
 app.use(express.static(`${__dirname}/public`));
-
-// Passport middleware
-app.use(passport.initialize());
-require('./services/passport')(passport);
 
 // Routes
 app.use('/api/v1/articles', articleRouter);

@@ -17,16 +17,27 @@ class Config {
     };
   }
 
-  static JWT() {
+  static getAuth() {
     return {
-      secret: process.env.JWT_SECRET,
-      expiresIn: process.env.JWT_EXPIRES_IN,
+      JWT: {
+        secret: process.env.JWT_SECRET,
+        expiresIn: process.env.JWT_EXPIRES_IN,
+      },
+      google: {
+        id: process.env.GOOGLE_CLIENT_ID,
+        secret: process.env.GOOGLE_CLIENT_SECRET,
+      },
+      facebook: {
+        id: process.env.FACEBOOK_CLIENT_ID,
+        secret: process.env.FACEBOOK_CLIENT_SECRET,
+      },
     };
   }
 
-  static getMailer() {
+  static getMailerOptions() {
     return {
-      service: process.env.EMAIL_SERVICE,
+      host: process.env.EMAIL_HOST,
+      port: process.env.EMAIL_PORT,
       auth: {
         user: process.env.EMAIL_USERNAME,
         pass: process.env.EMAIL_PASSWORD,
