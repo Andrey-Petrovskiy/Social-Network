@@ -1,7 +1,6 @@
 const userModel = require('./../models/user-model');
 const catchAsync = require('./../errors/catch-async');
 const AppError = require('./../errors/app-error');
-const db = require('./../services/di').get('dbConnection');
 
 exports.getAllUsers = catchAsync(async (req, res, next) => {
   const users = await userModel.findAll();
