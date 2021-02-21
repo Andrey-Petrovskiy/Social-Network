@@ -1,20 +1,24 @@
 const db = require('./../services/di').get('dbConnection');
 
-const activeRecord = (tableName, selectableProps) => {
+module.exports = (tableName, selectableProps) => {
   const findAll = () => db.select(selectableProps).from(tableName);
 
-  const findById = (id) => db.select(selectableProps).from(tableName).where('id', id);
+  const findById = (id) => db.select(selectableProps).from(tableName).where('id', id).first();
 
   const findOne = (filters) => db.select(selectableProps).from(tableName).where(filters).first();
 
-  const create = (props) => {
+  const create = async (props) => {
     delete props.id;
-    return db.insert(props).returning(selectableProps).into(tableName);
+    const user = await db.insert(props).returning(selectableProps).into(tableName);
+    return user[0];
   };
 
-  const update = (id, props) => {
+  const update = async (id, props) => {
     delete props.id;
-    db.update(props).from(tableName).where('id', id).returning(selectableProps);
+    const results = await db.update(props).from(tableName).where('id', id).returning(selectableProps);
+    if (!Array.isArray(results)) return results;
+
+    return results[0];
   };
 
   const remove = (id) => db.del().from(tableName).where('id', id);
@@ -28,5 +32,3 @@ const activeRecord = (tableName, selectableProps) => {
     remove,
   };
 };
-
-module.exports = activeRecord;

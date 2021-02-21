@@ -1,8 +1,8 @@
+const articleModel = require('../models/article-model');
 const catchAsync = require('./../errors/catch-async');
 const AppError = require('./../errors/app-error');
-const articleModel = require('../models/article-model');
 
-const getAllArticles = catchAsync(async (req, res, next) => {
+exports.getAllArticles = catchAsync(async (req, res, next) => {
   const articles = await articleModel.findAll();
 
   res.status(200).json({
@@ -13,7 +13,7 @@ const getAllArticles = catchAsync(async (req, res, next) => {
   });
 });
 
-const getArticle = catchAsync(async (req, res, next) => {
+exports.getArticle = catchAsync(async (req, res, next) => {
   const id = req.params.id;
   const article = await articleModel.findById(id);
 
@@ -29,7 +29,7 @@ const getArticle = catchAsync(async (req, res, next) => {
   });
 });
 
-const createArticle = catchAsync(async (req, res, next) => {
+exports.createArticle = catchAsync(async (req, res, next) => {
   const props = req.body;
   const article = await articleModel.create(props);
 
@@ -41,10 +41,14 @@ const createArticle = catchAsync(async (req, res, next) => {
   });
 });
 
-const updateArticle = catchAsync(async (req, res, next) => {
+exports.updateArticle = catchAsync(async (req, res, next) => {
   const props = req.body;
   const id = req.params.id;
   const article = await articleModel.update(id, props);
+
+  if (!article) {
+    return next(new AppError('No article found with that ID', 404));
+  }
 
   res.status(200).json({
     status: 'success',
@@ -54,14 +58,16 @@ const updateArticle = catchAsync(async (req, res, next) => {
   });
 });
 
-const deleteArticle = catchAsync(async (req, res, next) => {
+exports.deleteArticle = catchAsync(async (req, res, next) => {
   const id = req.params.id;
-  await articleModel.remove(id);
+  const article = await articleModel.remove(id);
+
+  if (!article) {
+    return next(new AppError('No article found with that ID', 404));
+  }
 
   res.status(200).json({
     status: 'success',
     message: `Article ${id} deleted`,
   });
 });
-
-module.exports = { getAllArticles, getArticle, createArticle, updateArticle, deleteArticle };
