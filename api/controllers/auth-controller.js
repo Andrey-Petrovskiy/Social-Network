@@ -5,6 +5,7 @@ const userModel = require('./../models/user-model');
 const catchAsync = require('./../errors/catch-async');
 const AppError = require('./../errors/app-error');
 const jwtConfig = require('./../services/config').getAuth().JWT;
+const port = require('./../services/config').getPort();
 const sendEmail = require('./../services/node-mailer');
 
 const signToken = (user) => {
@@ -21,7 +22,7 @@ exports.signUp = catchAsync(async (req, res, next) => {
   const user = await userModel.create(props);
   const token = signToken(user);
 
-  const url = `http://localhost:4000/api/v1/auth/confirmation/${token}`;
+  const url = `${req.protocol}://localhost:${port}/api/v1/auth/confirmation/${token}`;
 
   try {
     await sendEmail({
@@ -48,7 +49,7 @@ exports.confirmEmail = catchAsync(async (req, res, next) => {
   const currentUser = await userModel.findById(decodedToken.id);
   await userModel.update(currentUser.id, { email_confirmed: true });
 
-  res.redirect('http://localhost:4000/api/v1/auth/login');
+  res.redirect(`${req.protocol}://localhost:${port}/api/v1/auth/login`);
 });
 
 exports.login = catchAsync(async (req, res, next) => {
@@ -101,3 +102,5 @@ exports.profile = (req, res, next) => {
     data: 'profile',
   });
 };
+
+//TODO create profile route

@@ -7,11 +7,53 @@ const FacebookTokenStrategy = require('passport-facebook-token');
 const userModel = require('./../models/user-model');
 const authConfig = require('./config').getAuth();
 
-// JWT Strategy
 const jwtOptions = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken('Authorization'),
   secretOrKey: authConfig.JWT.secret,
   passReqToCallback: true,
+};
+
+const googleOptions = {
+  clientID: authConfig.google.id,
+  clientSecret: authConfig.google.secret,
+  passReqToCallback: true,
+};
+
+const facebookOptions = {
+  clientID: authConfig.facebook.id,
+  clientSecret: authConfig.facebook.secret,
+  passReqToCallback: true,
+};
+
+const socialAccStrategy = (socialId) => {
+  return async (req, accessToken, refreshToken, profile, done) => {
+    try {
+      const userSocialData = {[socialId]: profile.id};
+
+      if (req.user) {
+        const updatedUser = await userModel.update(req.user.id, userSocialData);
+        return done(null, updatedUser);
+      } else {
+        const existingUser = await userModel.findOne({ email: profile.emails[0].value });
+
+        if (!existingUser) {
+          userSocialData['email'] = profile.emails[0].value;
+          const newUser = await userModel.create(userSocialData);
+          return done(null, newUser);
+        }
+
+        if (existingUser[socialId] === profile.id) {
+          return done(null, existingUser);
+        }
+
+        const updatedUser = await userModel.update(existingUser.id, userSocialData);
+
+        return done(null, updatedUser);
+      }
+    } catch (err) {
+      done(err, false, err.message);
+    }
+  };
 };
 
 passport.use(
@@ -32,87 +74,6 @@ passport.use(
   })
 );
 
-// Google OAuth Strategy
-const googleOptions = {
-  clientID: authConfig.google.id,
-  clientSecret: authConfig.google.secret,
-  passReqToCallback: true,
-};
+passport.use('googleToken', new GooglePlusTokenStrategy(googleOptions, socialAccStrategy('google_id')));
 
-passport.use(
-  'googleToken',
-  new GooglePlusTokenStrategy(googleOptions, async (req, accessToken, refreshToken, profile, done) => {
-    try {
-      if (req.user) {
-        // User is logged in; linking social account id to the existing user
-        const updatedUser = await userModel.update(req.user.id, { google_id: profile.id });
-        return done(null, updatedUser);
-      } else {
-        const existingUser = await userModel.findOne({ email: profile.emails[0].value });
-
-        if (!existingUser) {
-          const newUser = await userModel.create({ email: profile.emails[0].value, google_id: profile.id });
-          return done(null, newUser);
-        }
-
-        if (existingUser.google_id === profile.id) {
-          return done(null, existingUser);
-        }
-
-        const updateParams = { google_id: profile.id };
-
-        if (!existingUser.email_confirmed) {
-          updateParams['password'] = null;
-        }
-
-        const updatedUser = await userModel.update(existingUser.id, updateParams);
-
-        return done(null, updatedUser);
-      }
-    } catch (err) {
-      done(err, false, err.message);
-    }
-  })
-);
-
-// Facebook OAuth Strategy
-const facebookOptions = {
-  clientID: authConfig.facebook.id,
-  clientSecret: authConfig.facebook.secret,
-  passReqToCallback: true,
-};
-
-passport.use(
-  'facebookToken',
-  new FacebookTokenStrategy(facebookOptions, async (req, accessToken, refreshToken, profile, done) => {
-    try {
-      if (req.user) {
-        const updatedUser = await userModel.update(req.user.id, { facebook_id: profile.id });
-        return done(null, updatedUser);
-      } else {
-        const existingUser = await userModel.findOne({ email: profile.emails[0].value });
-
-        if (!existingUser) {
-          const newUser = await userModel.create({ email: profile.emails[0].value, facebook_id: profile.id });
-          return done(null, newUser);
-        }
-
-        if (existingUser.facebook_id === profile.id) {
-          return done(null, existingUser);
-        }
-
-        const updateParams = { facebook_id: profile.id };
-
-        if (!existingUser.email_confirmed) {
-          updateParams['password'] = null;
-        }
-
-        const updatedUser = await userModel.update(existingUser.id, updateParams);
-
-        return done(null, updatedUser);
-      }
-    } catch (err) {
-      done(err, false, err.message);
-    }
-  })
-);
+passport.use('facebookToken', new FacebookTokenStrategy(facebookOptions, socialAccStrategy('facebook_id')));
