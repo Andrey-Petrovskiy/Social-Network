@@ -4,7 +4,7 @@ const activeRecord = require('./active-record');
 const db = require('./../services/di').get('dbConnection');
 
 const tableName = 'users';
-const selectableProps = ['id', 'email'];
+const selectableProps = ['id', 'email', 'role'];
 
 const beforeSave = (user) => {
   if (user.google_id || user.facebook_id) {
@@ -31,12 +31,12 @@ const verify = async (email, password) => {
   const findUser = (filters) => db.select().from(tableName).where(filters).first();
   const user = await findUser({ email });
 
-  if (!user.email_confirmed) {
-    throw new AppError('Please confirm your email', 401);
-  }
-
   if (!user || !(await bcrypt.compare(password, user.password))) {
     throw new AppError('Incorrect email or password', 401);
+  }
+
+  if (!user.email_confirmed) {
+    throw new AppError('Please confirm your email', 401);
   }
 
   return user;

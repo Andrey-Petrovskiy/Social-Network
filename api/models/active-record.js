@@ -1,6 +1,6 @@
 const db = require('./../services/di').get('dbConnection');
 
-const activeRecord = (tableName, selectableProps) => {
+module.exports = (tableName, selectableProps) => {
   const findAll = () => db.select(selectableProps).from(tableName);
 
   const findById = (id) => db.select(selectableProps).from(tableName).where('id', id).first();
@@ -32,5 +32,3 @@ const activeRecord = (tableName, selectableProps) => {
     remove,
   };
 };
-
-module.exports = activeRecord;

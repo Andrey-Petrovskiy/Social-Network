@@ -1,9 +1,32 @@
-const express = require('express');
-const router = express.Router();
-const { getAllUsers, createUser, getUser, updateUser, deleteUser } = require('../controllers/user-controller');
+const router = require('express').Router();
+const passport = require('passport');
+require('./../services/passport');
 
-router.route('/').get(getAllUsers).post(createUser);
+const userController = require('../controllers/user-controller');
+const checkPermissions = require('./../middlewares/acl');
+const passportJWT = passport.authenticate('jwt', { session: false });
+const userModel = require('./../models/user-model');
 
-router.route('/:id').get(getUser).put(updateUser).delete(deleteUser);
+router.route('/').get(passportJWT, userController.getAllUsers).post(passportJWT, userController.createUser);
+
+router
+  .route('/:id')
+  .get(passportJWT, userController.getUser)
+  .put(
+    passportJWT,
+    checkPermissions([
+      { permission: 'updateAnyUser' },
+      { permission: 'updateOwnUser', own: { model: userModel, column: 'id' } },
+    ]),
+    userController.updateUser
+  )
+  .delete(
+    passportJWT,
+    checkPermissions([
+      { permission: 'deleteAnyUser' },
+      { permission: 'deleteOwnUser', own: { model: userModel, column: 'id' } },
+    ]),
+    userController.deleteUser
+  );
 
 module.exports = router;

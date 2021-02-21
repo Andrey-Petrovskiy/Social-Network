@@ -1,43 +1,74 @@
-const jwt = require('jsonwebtoken');
-const passport = require('passport');
 const userModel = require('./../models/user-model');
 const catchAsync = require('./../errors/catch-async');
 const AppError = require('./../errors/app-error');
-const config = require('./../services/config');
+const db = require('./../services/di').get('dbConnection');
 
-const getAllUsers = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'This route is not yet defined',
+exports.getAllUsers = catchAsync(async (req, res, next) => {
+  const users = await userModel.findAll();
+
+  res.status(200).json({
+    users: users.length,
+    data: {
+      users,
+    },
   });
-};
+});
 
-const createUser = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'This route is not yet defined',
+exports.getUser = catchAsync(async (req, res, next) => {
+  const id = req.params.id;
+  const user = await userModel.findById(id);
+
+  if (!user) {
+    return next(new AppError('No article found with that ID', 404));
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      user,
+    },
   });
-};
+});
 
-const getUser = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'This route is not yet defined',
+exports.createUser = catchAsync(async (req, res, next) => {
+  const props = req.body;
+  const user = await userModel.create(props);
+
+  res.status(201).json({
+    status: 'success',
+    data: {
+      user,
+    },
   });
-};
+});
 
-const updateUser = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'This route is not yet defined',
+exports.updateUser = catchAsync(async (req, res, next) => {
+  const props = req.body;
+  const id = req.params.id;
+  const user = await userModel.update(id, props);
+
+  if (!user) {
+    return next(new AppError('No article found with that ID', 404));
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      user,
+    },
   });
-};
+});
 
-const deleteUser = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'This route is not yet defined',
+exports.deleteUser = catchAsync(async (req, res, next) => {
+  const id = req.params.id;
+  const user = await userModel.remove(id);
+
+  if (!user) {
+    return next(new AppError('No article found with that ID', 404));
+  }
+
+  res.status(200).json({
+    status: 'success',
+    message: `user ${id} deleted`,
   });
-};
-
-module.exports = { getAllUsers, createUser, getUser, updateUser, deleteUser };
+});

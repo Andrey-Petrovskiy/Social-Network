@@ -63,7 +63,6 @@ exports.login = catchAsync(async (req, res, next) => {
 });
 
 exports.googleOAuth = catchAsync(async (req, res, next) => {
-  console.log('CONTROLLER ===== ', req.user);
   const token = await signToken(req.user);
 
   res.status(200).json({
@@ -73,7 +72,6 @@ exports.googleOAuth = catchAsync(async (req, res, next) => {
 });
 
 exports.facebookOAuth = catchAsync(async (req, res, next) => {
-  console.log(req.user);
   const token = await signToken(req.user);
 
   res.status(200).json({
@@ -83,8 +81,7 @@ exports.facebookOAuth = catchAsync(async (req, res, next) => {
 });
 
 exports.linkGoogle = catchAsync(async (req, res, next) => {
-  console.log('LINKING ACC ===== ', req.user);
-  res.json({
+  res.status(200).json({
     success: true,
     id: req.user.id,
     message: 'Successfully linked account with Google',
@@ -92,7 +89,7 @@ exports.linkGoogle = catchAsync(async (req, res, next) => {
 });
 
 exports.linkFacebook = catchAsync(async (req, res, next) => {
-  res.json({
+  res.status(200).json({
     success: true,
     id: req.user.id,
     message: 'Successfully linked account with Facebook',
