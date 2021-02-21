@@ -1,5 +1,6 @@
 const express = require('express');
 const knex = require('knex');
+const cors = require('cors');
 
 const DI = require('./services/di');
 const config = require('./services/config');
@@ -16,6 +17,8 @@ const userRouter = require('./routes/user-routes');
 const authRouter = require('./routes/auth-routes');
 
 const app = express();
+
+app.use(cors());
 
 app.use(express.json());
 app.use(express.static(`${__dirname}/public`));

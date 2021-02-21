@@ -7,7 +7,7 @@ const checkPermissions = require('./../middlewares/acl');
 const passportJWT = passport.authenticate('jwt', { session: false });
 const articleModel = require('./../models/article-model');
 
-router.route('/').get(passportJWT, articleController.getAllArticles).post(passportJWT, articleController.createArticle);
+router.route('/').get(articleController.getAllArticles).post(passportJWT, articleController.createArticle);
 
 router
   .route('/:id')
