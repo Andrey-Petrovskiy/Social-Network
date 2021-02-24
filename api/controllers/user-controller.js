@@ -1,9 +1,9 @@
-const userModel = require('./../models/user-model');
+const User = require('./../models/user');
 const catchAsync = require('./../errors/catch-async');
 const AppError = require('./../errors/app-error');
 
 exports.getAllUsers = catchAsync(async (req, res, next) => {
-  const users = await userModel.findAll();
+  const users = await User.query().select('name');
 
   res.status(200).json({
     users: users.length,
@@ -15,10 +15,10 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
 
 exports.getUser = catchAsync(async (req, res, next) => {
   const id = req.params.id;
-  const user = await userModel.findById(id);
+  const user = await User.query().findById(id).withGraphFetched('articles');
 
   if (!user) {
-    return next(new AppError('No article found with that ID', 404));
+    return next(new AppError('No user found with that ID', 404));
   }
 
   res.status(200).json({
@@ -31,7 +31,7 @@ exports.getUser = catchAsync(async (req, res, next) => {
 
 exports.createUser = catchAsync(async (req, res, next) => {
   const props = req.body;
-  const user = await userModel.create(props);
+  const user = await User.query().insert(props);
 
   res.status(201).json({
     status: 'success',
@@ -44,10 +44,12 @@ exports.createUser = catchAsync(async (req, res, next) => {
 exports.updateUser = catchAsync(async (req, res, next) => {
   const props = req.body;
   const id = req.params.id;
-  const user = await userModel.update(id, props);
+  const user = await User.query().patchAndFetchById(id, props);
+
+  console.log(user);
 
   if (!user) {
-    return next(new AppError('No article found with that ID', 404));
+    return next(new AppError('No user found with that ID', 404));
   }
 
   res.status(200).json({
@@ -60,10 +62,10 @@ exports.updateUser = catchAsync(async (req, res, next) => {
 
 exports.deleteUser = catchAsync(async (req, res, next) => {
   const id = req.params.id;
-  const user = await userModel.remove(id);
+  const user = await User.query().deleteById(id);
 
   if (!user) {
-    return next(new AppError('No article found with that ID', 404));
+    return next(new AppError('No user found with that ID', 404));
   }
 
   res.status(200).json({

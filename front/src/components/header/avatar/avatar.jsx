@@ -1,6 +1,7 @@
 import './avatar.css';
 import React, { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 import UserAvatar from '../../../images/user-avatar.jpg';
 import { UsernameContext } from '../../../containers/main-page';
@@ -32,5 +33,9 @@ function Avatar() {
     </div>
   );
 }
+
+Avatar.propTypes = {
+  username: PropTypes.string.isRequired,
+};
 
 export default Avatar;

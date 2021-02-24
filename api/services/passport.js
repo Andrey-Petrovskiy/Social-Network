@@ -4,8 +4,8 @@ const ExtractJwt = require('passport-jwt').ExtractJwt;
 const GooglePlusTokenStrategy = require('passport-google-plus-token');
 const FacebookTokenStrategy = require('passport-facebook-token');
 
-const userModel = require('./../models/user-model');
 const authConfig = require('./config').getAuth();
+const User = require('./../models/user');
 
 const jwtOptions = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken('Authorization'),
@@ -28,17 +28,18 @@ const facebookOptions = {
 const socialAccStrategy = (socialId) => {
   return async (req, accessToken, refreshToken, profile, done) => {
     try {
-      const userSocialData = {[socialId]: profile.id};
+      const userSocialData = { [socialId]: profile.id };
 
       if (req.user) {
-        const updatedUser = await userModel.update(req.user.id, userSocialData);
+        const updatedUser = await User.query().patchAndFetchById(req.profile.id, userSocialData);
+
         return done(null, updatedUser);
       } else {
-        const existingUser = await userModel.findOne({ email: profile.emails[0].value });
+        const existingUser = await User.query().findOne({ email: profile.emails[0].value });
 
         if (!existingUser) {
           userSocialData['email'] = profile.emails[0].value;
-          const newUser = await userModel.create(userSocialData);
+          const newUser = await User.query().insert(userSocialData);
           return done(null, newUser);
         }
 
@@ -46,7 +47,7 @@ const socialAccStrategy = (socialId) => {
           return done(null, existingUser);
         }
 
-        const updatedUser = await userModel.update(existingUser.id, userSocialData);
+        const updatedUser = await User.query().patchAndFetchById(existingUser.id, userSocialData);
 
         return done(null, updatedUser);
       }
@@ -59,7 +60,7 @@ const socialAccStrategy = (socialId) => {
 passport.use(
   new JwtStrategy(jwtOptions, async function (req, payload, done) {
     try {
-      const user = await userModel.findById(payload.id);
+      const user = await User.query().findById(payload.id);
 
       if (user) {
         return done(null, user);
