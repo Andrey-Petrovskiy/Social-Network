@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import './avatar.css';
-import UserAvatar from '../../../images/user-avatar.jpg';
+import React, { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
-function Avatar({ username }) {
+import UserAvatar from '../../../images/user-avatar.jpg';
+import { UsernameContext } from '../../../containers/main-page';
+
+function Avatar() {
+  const username = useContext(UsernameContext);
+
   const [display, setDisplay] = useState(false);
 
   const toggleDropdown = (event) => {

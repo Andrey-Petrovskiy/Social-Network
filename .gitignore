@@ -5,7 +5,6 @@
 /node_modules
 /.pnp
 .pnp.js
-./front/.eslintcache 
 
 # testing
 /coverage
@@ -15,6 +14,7 @@
 
 # misc
 */.env
+*/.eslintcache
 .idea
 .DS_Store
 .env.local

@@ -5,27 +5,27 @@ require('./../services/passport');
 const userController = require('../controllers/user-controller');
 const checkPermissions = require('./../middlewares/acl');
 const passportJWT = passport.authenticate('jwt', { session: false });
-const userModel = require('./../models/user-model');
+const User = require('./../models/user');
 
-router.route('/').get(passportJWT, userController.getAllUsers).post(passportJWT, userController.createUser);
+router.route('/').get(/*passportJWT,*/ userController.getAllUsers).post(/*passportJWT,*/ userController.createUser);
 
 router
   .route('/:id')
-  .get(passportJWT, userController.getUser)
+  .get(/*passportJWT,*/ userController.getUser)
   .put(
-    passportJWT,
+    /*passportJWT,
     checkPermissions([
       { permission: 'updateAnyUser' },
-      { permission: 'updateOwnUser', own: { model: userModel, column: 'id' } },
-    ]),
+      { permission: 'updateOwnUser', own: { model: User, column: 'id' } },
+    ]),*/
     userController.updateUser
   )
   .delete(
-    passportJWT,
+    /*passportJWT,
     checkPermissions([
       { permission: 'deleteAnyUser' },
-      { permission: 'deleteOwnUser', own: { model: userModel, column: 'id' } },
-    ]),
+      { permission: 'deleteOwnUser', own: { model: User, column: 'id' } },
+    ]),*/
     userController.deleteUser
   );
 

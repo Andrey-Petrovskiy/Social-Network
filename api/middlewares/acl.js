@@ -1,4 +1,4 @@
-const userModel = require('./../models/user-model');
+const User = require('./../models/user');
 const catchAsync = require('./../errors/catch-async');
 const AppError = require('./../errors/app-error');
 
@@ -20,13 +20,12 @@ const permissions = {
 module.exports = (restrictions) => {
   return catchAsync(async (req, res, next) => {
     const { id } = req.user;
-    const { role } = await userModel.findById(id);
+    const { role } = await User.query().findById(id);
     const userPermissions = permissions[role];
 
     for await (const restriction of restrictions) {
       if (restriction.own) {
-        const item = await restriction.own.model.findById(req.params.id);
-
+        const item = await restriction.own.model.query().findById(req.params.id);
         if (!item) {
           return next(new AppError('There is no item to perform this action on', 404));
         }

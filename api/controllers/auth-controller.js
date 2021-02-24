@@ -1,12 +1,12 @@
 const jwt = require('jsonwebtoken');
 const { promisify } = require('util');
 
-const userModel = require('./../models/user-model');
+const User = require('./../models/user');
 const catchAsync = require('./../errors/catch-async');
 const AppError = require('./../errors/app-error');
+const sendEmail = require('./../services/node-mailer');
 const jwtConfig = require('./../services/config').getAuth().JWT;
 const port = require('./../services/config').getPort();
-const sendEmail = require('./../services/node-mailer');
 
 const signToken = (user) => {
   return jwt.sign({ id: user.id }, jwtConfig.secret, { expiresIn: jwtConfig.expiresIn });
@@ -15,11 +15,12 @@ const signToken = (user) => {
 exports.signUp = catchAsync(async (req, res, next) => {
   const props = { email: req.body.email, password: req.body.password };
 
-  if (await userModel.findOne({ email: props.email })) {
+  if (await User.query().findOne({ email: props.email })) {
     return next(new AppError('User with this email already exists', 401));
   }
 
-  const user = await userModel.create(props);
+  const user = await User.create(props);
+  console.log(user);
   const token = signToken(user);
 
   const url = `${req.protocol}://localhost:${port}/api/v1/auth/confirmation/${token}`;
@@ -46,15 +47,15 @@ exports.signUp = catchAsync(async (req, res, next) => {
 
 exports.confirmEmail = catchAsync(async (req, res, next) => {
   const decodedToken = await promisify(jwt.verify)(req.params.token, jwtConfig.secret);
-  const currentUser = await userModel.findById(decodedToken.id);
-  await userModel.update(currentUser.id, { email_confirmed: true });
+  const currentUser = await User.query().findById(decodedToken.id);
+  await User.query().patchAndFetchById(currentUser.id, { email_confirmed: true });
 
   res.redirect(`${req.protocol}://localhost:${port}/api/v1/auth/login`);
 });
 
 exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
-  const user = await userModel.verify(email, password);
+  const user = await User.verify(email, password);
 
   const token = signToken(user);
   res.status(200).json({
