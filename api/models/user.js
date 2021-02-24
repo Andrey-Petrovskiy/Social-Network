@@ -42,6 +42,7 @@ class User extends Model {
     const University = require('./university');
     const Like = require('./like');
     const Article = require('./article');
+    const Follower = require('./follower');
 
     return {
       city: {
@@ -74,6 +75,22 @@ class User extends Model {
         join: {
           from: 'users.id',
           to: 'likes.user_id',
+        },
+      },
+      userIsFollowed: {
+        relation: Model.HasManyRelation,
+        modelClass: Follower,
+        join: {
+          from: 'users.id',
+          to: 'followers.followed_id',
+        },
+      },
+      userIsFollowing: {
+        relation: Model.HasManyRelation,
+        modelClass: Follower,
+        join: {
+          from: 'users.id',
+          to: 'followers.follower_id',
         },
       },
     };

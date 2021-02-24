@@ -25,10 +25,10 @@ exports.up = function (knex) {
       table.timestamps(true, true);
     })
     .createTable('followers', (table) => {
-      table.integer('user_id').references('id').inTable('users').notNullable();
+      table.integer('followed_id').references('id').inTable('users').notNullable();
       table.integer('follower_id').references('id').inTable('users').notNullable();
       table.timestamps(true, true);
-      table.primary(['user_id', 'follower_id']);
+      table.primary(['followed_id', 'follower_id']);
     })
     .createTable('articles', (table) => {
       table.increments();
