@@ -5,7 +5,7 @@ class Comment extends Model {
 
   static get relationMappings() {
     const Article = require('./article');
-    const CommentImages = require('./comment-image-image');
+    const CommentImages = require('./comment-image');
 
     return {
       articles: {

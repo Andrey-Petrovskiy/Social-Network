@@ -1,8 +1,6 @@
 import './avatar.css';
 import React, { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
-
 import UserAvatar from '../../../images/user-avatar.jpg';
 import { UsernameContext } from '../../../containers/main-page';
 
@@ -20,7 +18,7 @@ function Avatar() {
     <div className="avatar">
       <img src={UserAvatar} alt="UserAvatar" className="avatar-image" onClick={toggleDropdown} />
       <span className="user-name">{username}</span>
-      {display ? (
+      {display && (
         <ul className="dropdown">
           <Link to="/profile">
             <li>Profile</li>
@@ -29,13 +27,9 @@ function Avatar() {
             <li>Logout</li>
           </Link>
         </ul>
-      ) : null}
+      )}
     </div>
   );
 }
-
-Avatar.propTypes = {
-  username: PropTypes.string.isRequired,
-};
 
 export default Avatar;

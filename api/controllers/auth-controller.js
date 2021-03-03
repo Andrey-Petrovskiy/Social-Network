@@ -20,7 +20,6 @@ exports.signUp = catchAsync(async (req, res, next) => {
   }
 
   const user = await User.create(props);
-  console.log(user);
   const token = signToken(user);
 
   const url = `${req.protocol}://localhost:${port}/api/v1/auth/confirmation/${token}`;

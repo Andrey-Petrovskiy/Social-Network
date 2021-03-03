@@ -14,14 +14,14 @@ const jwtOptions = {
 };
 
 const googleOptions = {
-  clientID: authConfig.google.id,
-  clientSecret: authConfig.google.secret,
+  clientID: authConfig.google.clientID,
+  clientSecret: authConfig.google.clientSecret,
   passReqToCallback: true,
 };
 
 const facebookOptions = {
-  clientID: authConfig.facebook.id,
-  clientSecret: authConfig.facebook.secret,
+  clientID: authConfig.facebook.clientID,
+  clientSecret: authConfig.facebook.clientSecret,
   passReqToCallback: true,
 };
 

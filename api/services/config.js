@@ -24,12 +24,12 @@ class Config {
         expiresIn: process.env.JWT_EXPIRES_IN,
       },
       google: {
-        id: process.env.GOOGLE_CLIENT_ID,
-        secret: process.env.GOOGLE_CLIENT_SECRET,
+        clientID: process.env.GOOGLE_CLIENT_ID,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       },
       facebook: {
-        id: process.env.FACEBOOK_CLIENT_ID,
-        secret: process.env.FACEBOOK_CLIENT_SECRET,
+        clientID: process.env.FACEBOOK_CLIENT_ID,
+        clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
       },
     };
   }

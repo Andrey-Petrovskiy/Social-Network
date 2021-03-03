@@ -1,7 +1,7 @@
 const { Model } = require('objection');
 
 class Follower extends Model {
-  static tableName = 'cities';
+  static tableName = 'followers';
 
   static get relationMappings() {
     const User = require('./user');

@@ -2,13 +2,13 @@ const { Model } = require('objection');
 
 class Article extends Model {
   static tableName = 'articles';
-  /*static selectable = ['title', 'text', 'created_at'];*/
 
   static get relationMappings() {
     const User = require('./user');
     const Like = require('./like');
     const Tag = require('./tag');
     const ArticleImage = require('./article-image');
+    const Comment = require('./comment');
 
     return {
       user: {
@@ -45,6 +45,14 @@ class Article extends Model {
         join: {
           from: 'articles.id',
           to: 'article_images.article_id',
+        },
+      },
+      comments: {
+        relation: Model.HasManyRelation,
+        modelClass: Comment,
+        join: {
+          from: 'articles.id',
+          to: 'comments.article_id',
         },
       },
     };
