@@ -1,7 +1,6 @@
 const { Model } = require('objection');
 const bcrypt = require('bcrypt');
 const AppError = require('./../errors/app-error');
-//TODO follower relations
 
 class User extends Model {
   static tableName = 'users';
@@ -36,6 +35,12 @@ class User extends Model {
       return user;
     }
   }
+
+  static modifiers = {
+    selectFollowed(query, id) {
+      query.joinRelated('userIsFollowed').select('id').where('follower_id', id);
+    },
+  };
 
   static get relationMappings() {
     const City = require('./city');
