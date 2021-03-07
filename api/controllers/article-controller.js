@@ -6,6 +6,7 @@ const knex = Article.knex();
 
 exports.getAllArticles = catchAsync(async (req, res, next) => {
   //TODO: rewrite into an Objection query
+
   /*const { id } = req.user;
 
   const selectFollowed = await User.basics().modify('selectFollowed', `${id}`);

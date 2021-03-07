@@ -34,8 +34,6 @@ function AddArticleContainer({ props }) {
   const onSubmitEdit = useCallback(
     async (formData) => {
       try {
-        console.log(articleId);
-        console.log(formData);
         await updateArticle({ articleId, formData });
       } catch (e) {
         console.log(e);

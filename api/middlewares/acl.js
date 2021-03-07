@@ -26,6 +26,7 @@ module.exports = (restrictions) => {
     for await (const restriction of restrictions) {
       if (restriction.own) {
         const item = await restriction.own.model.query().findById(req.params.id);
+
         if (!item) {
           return next(new AppError('There is no item to perform this action on', 404));
         }
