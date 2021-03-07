@@ -9,8 +9,6 @@ class User extends Model {
     const beforeSave = (user) => {
       if (user.google_id || user.facebook_id) {
         return user;
-      } else if (!user.password) {
-        throw new AppError('Please enter a password', 401);
       } else {
         const hashPassword = (password) => bcrypt.hashSync(password, 10);
         return { ...user, password: hashPassword(user.password) };
@@ -21,10 +19,6 @@ class User extends Model {
   }
 
   static async verify(email, password) {
-    if (!email || !password) {
-      throw new AppError('Please provide email and password', 400);
-    }
-
     const user = await this.query().findOne({ email: email });
 
     if (!user.email_confirmed) {
@@ -38,7 +32,20 @@ class User extends Model {
 
   static modifiers = {
     selectFollowed(query, id) {
-      query.joinRelated('userIsFollowed').select('id').where('follower_id', id);
+      const { ref } = User;
+      query.joinRelated('userIsFollowed').select(ref('id')).where(ref('follower_id'), id);
+    },
+
+    selectFollowers(query, id) {
+      query.joinRelated('userIsFollowing').select('id').where('followed_id', id);
+    },
+
+    selectFriends(query, id) {
+      query
+        .joinRelated('[userIsFollowed, userIsFollowing]')
+        .select('id')
+        .where('userIsFollowed.follower_id', id)
+        .andWhere('userIsFollowing.followed_id', id);
     },
   };
 

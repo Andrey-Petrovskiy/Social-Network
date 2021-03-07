@@ -5,6 +5,17 @@ const AppError = require('./../errors/app-error');
 exports.getAllUsers = catchAsync(async (req, res, next) => {
   const users = await User.query().select('name');
 
+  /*
+  const users = await User.query()
+    .modify('selectFollowed', '12')
+    .withGraphFetched('articles(visibleToAll)')
+    .modifiers({
+      visibleToAll(builder) {
+        builder.where('visible_to', 'all');
+      },
+    });
+*/
+
   res.status(200).json({
     users: users.length,
     data: {
@@ -29,7 +40,7 @@ exports.getUser = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.createUser = catchAsync(async (req, res, next) => {
+/*exports.createUser = catchAsync(async (req, res, next) => {
   const props = req.body;
   const user = await User.query().insert(props);
 
@@ -39,14 +50,12 @@ exports.createUser = catchAsync(async (req, res, next) => {
       user,
     },
   });
-});
+});*/
 
 exports.updateUser = catchAsync(async (req, res, next) => {
   const props = req.body;
   const id = req.params.id;
   const user = await User.query().patchAndFetchById(id, props);
-
-  console.log(user);
 
   if (!user) {
     return next(new AppError('No user found with that ID', 404));

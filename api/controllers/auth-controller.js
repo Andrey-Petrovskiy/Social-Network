@@ -3,7 +3,6 @@ const { promisify } = require('util');
 
 const User = require('./../models/user');
 const catchAsync = require('./../errors/catch-async');
-const AppError = require('./../errors/app-error');
 const sendEmail = require('./../services/node-mailer');
 const jwtConfig = require('./../services/config').getAuth().JWT;
 const port = require('./../services/config').getPort();
@@ -14,10 +13,6 @@ const signToken = (user) => {
 
 exports.signUp = catchAsync(async (req, res, next) => {
   const props = { email: req.body.email, password: req.body.password };
-
-  if (await User.query().findOne({ email: props.email })) {
-    return next(new AppError('User with this email already exists', 401));
-  }
 
   const user = await User.create(props);
   const token = signToken(user);
