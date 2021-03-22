@@ -1,6 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Article from '../article/article';
+
+import Button from '@material-ui/core/Button';
+
+import Article from './Article';
 
 const ArticleList = ({
   pageData,
@@ -21,9 +24,9 @@ const ArticleList = ({
         )}
 
       {hasNextPage && (
-        <button onClick={() => fetchNextPage()} disabled={isFetchingNextPage}>
+        <Button variant="outlined" onClick={() => fetchNextPage()} disabled={isFetchingNextPage}>
           Load more {isFetchingNextPage && 'Loading more...'}
-        </button>
+        </Button>
       )}
     </div>
   );
