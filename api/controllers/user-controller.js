@@ -1,20 +1,10 @@
 const User = require('./../models/user');
 const catchAsync = require('./../errors/catch-async');
 const AppError = require('./../errors/app-error');
+const imageDir = require('./../services/config').getImageDirectory();
 
 exports.getAllUsers = catchAsync(async (req, res, next) => {
   const users = await User.query().select('name');
-
-  /*
-  const users = await User.query()
-    .modify('selectFollowed', '12')
-    .withGraphFetched('articles(visibleToAll)')
-    .modifiers({
-      visibleToAll(builder) {
-        builder.where('visible_to', 'all');
-      },
-    });
-*/
 
   res.status(200).json({
     users: users.length,
@@ -25,8 +15,7 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
 });
 
 exports.getUser = catchAsync(async (req, res, next) => {
-  const id = req.params.id;
-  const user = await User.query().findById(id).withGraphFetched('articles');
+  const user = await User.query().findById(req.params.id).withGraphFetched('articles');
 
   if (!user) {
     return next(new AppError('No user found with that ID', 404));
@@ -40,22 +29,8 @@ exports.getUser = catchAsync(async (req, res, next) => {
   });
 });
 
-/*exports.createUser = catchAsync(async (req, res, next) => {
-  const props = req.body;
-  const user = await User.query().insert(props);
-
-  res.status(201).json({
-    status: 'success',
-    data: {
-      user,
-    },
-  });
-});*/
-
 exports.updateUser = catchAsync(async (req, res, next) => {
-  const props = req.body;
-  const id = req.params.id;
-  const user = await User.query().patchAndFetchById(id, props);
+  const user = await User.query().patchAndFetchById(req.params.id, req.body);
 
   if (!user) {
     return next(new AppError('No user found with that ID', 404));
@@ -70,8 +45,7 @@ exports.updateUser = catchAsync(async (req, res, next) => {
 });
 
 exports.deleteUser = catchAsync(async (req, res, next) => {
-  const id = req.params.id;
-  const user = await User.query().deleteById(id);
+  const user = await User.query().deleteById(req.params.id);
 
   if (!user) {
     return next(new AppError('No user found with that ID', 404));
@@ -80,5 +54,23 @@ exports.deleteUser = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: 'success',
     message: `user ${id} deleted`,
+  });
+});
+
+exports.getAvatar = catchAsync(async (req, res, next) => {
+  const user = User.query().findById(req.params.id);
+  const avatar = user?.avatar;
+
+  res.sendFile(`${avatar}`, { root: imageDir });
+});
+
+exports.updateAvatar = catchAsync(async (req, res, next) => {
+  const user = await User.query().patchAndFetchById(req.params.id, { avatar: req.file.filename });
+
+  res.status(201).json({
+    status: 'success',
+    data: {
+      user,
+    },
   });
 });

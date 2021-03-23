@@ -44,6 +44,10 @@ class Config {
       },
     };
   }
+
+  static getImageDirectory() {
+    return process.env.IMG_DIR;
+  }
 }
 
 module.exports = Config;
