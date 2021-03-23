@@ -7,8 +7,9 @@ const userController = require('../controllers/user-controller');
 const checkPermissions = require('./../middlewares/acl');
 const validator = require('./../middlewares/validator');
 const passportJWT = passport.authenticate('jwt', { session: false });
+const upload = require('./../middlewares/uploader');
 
-router.route('/').get(/*passportJWT,*/ userController.getAllUsers) /*.post(passportJWT, userController.createUser)*/;
+router.route('/').get(/*passportJWT,*/ userController.getAllUsers);
 
 router
   .route('/:id')
@@ -33,5 +34,10 @@ router
     ]),*/
     userController.deleteUser
   );
+
+router
+  .route('/:id/avatar')
+  .get(/*passportJWT,*/ userController.getAvatar)
+  .put(/*passportJWT,*/ upload.single('avatar'), userController.updateAvatar);
 
 module.exports = router;
