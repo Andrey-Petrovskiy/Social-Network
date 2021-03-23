@@ -1,9 +1,9 @@
 import React from 'react';
 import { useInfiniteQuery } from 'react-query';
 import { getAllArticles } from './hooks/crud';
-import ArticleList from '../../components/content/article-list/article-list';
+import ArticleList from '../../components/ArticleList';
 
-function ArticlesContainer() {
+function ArticleListContainer() {
   const {
     data: response,
     isError,
@@ -28,5 +28,5 @@ function ArticlesContainer() {
     />
   );
 }
-//TODO: fix scrolling to the top on article loading
-export default ArticlesContainer;
+
+export default ArticleListContainer;
