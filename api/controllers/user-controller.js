@@ -1,3 +1,4 @@
+const fs = require('fs');
 const User = require('./../models/user');
 const catchAsync = require('./../errors/catch-async');
 const AppError = require('./../errors/app-error');
@@ -58,14 +59,21 @@ exports.deleteUser = catchAsync(async (req, res, next) => {
 });
 
 exports.getAvatar = catchAsync(async (req, res, next) => {
-  const user = User.query().findById(req.params.id);
-  const avatar = user?.avatar;
+  const user = await User.query().findById(req.params.id);
+  const avatar = user.avatar;
 
   res.sendFile(`${avatar}`, { root: imageDir });
 });
 
 exports.updateAvatar = catchAsync(async (req, res, next) => {
-  const user = await User.query().patchAndFetchById(req.params.id, { avatar: req.file.filename });
+  const avatarData = req.body.avatar.split(',');
+  const extension = avatarData[0].split('/')[1].split(';')[0];
+  const fileName = `${Date.now()}.${extension}`;
+  const buf = new Buffer.from(avatarData[1], 'base64');
+
+  fs.writeFileSync(`${__dirname}/../public/uploads/${fileName}`, buf);
+
+  const user = await User.query().patchAndFetchById(req.params.id, { avatar: fileName });
 
   res.status(201).json({
     status: 'success',

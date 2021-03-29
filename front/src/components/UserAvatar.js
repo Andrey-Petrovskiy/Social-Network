@@ -1,11 +1,10 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import Avatar from '@material-ui/core/Avatar';
+
 import { makeStyles } from '@material-ui/styles';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-
-import AvatarImage from '../images/user-avatar.jpg';
 
 const useStyles = makeStyles((theme) => ({
   avatar: {
@@ -26,10 +25,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function UserAvatar({ username }) {
+function UserAvatar({ user }) {
+  const { id, name } = user;
+
   const classes = useStyles();
 
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   const handleClick = () => {
     setOpen((prev) => !prev);
@@ -43,7 +44,12 @@ function UserAvatar({ username }) {
     <>
       <ClickAwayListener onClickAway={handleClickAway}>
         <div className={classes.avatar}>
-          <Avatar src={AvatarImage} alt="AvatarImage" onClick={handleClick} />
+          <Avatar
+            src={`http://localhost:4000/api/v1/users/${id}/avatar`}
+            alt="user-avatar"
+            onClick={handleClick}
+          />
+
           {open && (
             <ul className={classes.dropdown}>
               <Link to="/profile">
@@ -56,7 +62,7 @@ function UserAvatar({ username }) {
           )}
         </div>
       </ClickAwayListener>
-      <div className={classes.username}>{username}</div>
+      <div className={classes.username}>{name}</div>
     </>
   );
 }
