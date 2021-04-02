@@ -15,13 +15,13 @@ router
   .route('/:id')
   .get(/*passportJWT,*/ userController.getUser)
   .put(
-    passportJWT,
+    /*passportJWT,
     checkPermissions([
       { permission: 'updateAnyUser' },
       { permission: 'updateOwnUser', own: { model: User, column: 'id' } },
-    ]),
+    ]),*/
     validator({
-      password: ['required', 'min:8', 'max:50'],
+      password: ['min:8', 'max:50'],
       email: ['required', 'email', 'unique:users:update'],
     }),
     userController.updateUser
@@ -38,6 +38,6 @@ router
 router
   .route('/:id/avatar')
   .get(/*passportJWT,*/ userController.getAvatar)
-  .put(/*passportJWT,*/ upload.single('avatar'), userController.updateAvatar);
+  .put(/*passportJWT,*/ /*upload.single('avatar'), */ userController.updateAvatar);
 
 module.exports = router;

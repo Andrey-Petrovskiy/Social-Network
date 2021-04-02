@@ -16,7 +16,8 @@ export const getArticleById = async (id) => {
 };
 
 export const createArticleRequest = async ({ formData }) => {
-  return apiClient.post('/articles', formData);
+  const data = { ...formData, user_id: 28 };
+  return apiClient.post('/articles', data);
 };
 
 export const updateArticleRequest = async ({ articleId, formData }) => {

@@ -3,9 +3,9 @@ import { Route, Switch } from 'react-router-dom';
 
 import AddArticleContainer from '../containers/articles/AddArticle';
 import ArticleListContainer from '../containers/articles/ArticleList';
-import Profile from './Profile';
+import ProfileContainer from '../containers/user/Profile';
 
-function Body({ handleUsername }) {
+function Body() {
   return (
     <Switch>
       <Route exact path="/" component={() => <ArticleListContainer />} />
@@ -14,7 +14,7 @@ function Body({ handleUsername }) {
         path="/(add-article|edit-article)/:id?"
         component={(props) => <AddArticleContainer props={props} />}
       />
-      <Route exact path="/profile" component={() => <Profile handleUsername={handleUsername} />} />
+      <Route exact path="/profile" component={() => <ProfileContainer />} />
     </Switch>
   );
 }
