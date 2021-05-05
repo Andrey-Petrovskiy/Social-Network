@@ -31,11 +31,13 @@ exports.getUser = catchAsync(async (req, res, next) => {
 });
 
 exports.updateUser = catchAsync(async (req, res, next) => {
-  const user = await User.query().patchAndFetchById(req.params.id, req.body);
+  const updatedUser = await User.query().patchAndFetchById(req.params.id, req.body);
 
-  if (!user) {
+  if (!updatedUser) {
     return next(new AppError('No user found with that ID', 404));
   }
+
+  const { password, ...user } = { ...updatedUser };
 
   res.status(200).json({
     status: 'success',

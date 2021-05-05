@@ -1,31 +1,13 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
+import { avatarUrl } from '../../config/variables';
+
 import Avatar from '@material-ui/core/Avatar';
-
-import { makeStyles } from '@material-ui/styles';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import { useStyles } from './styles';
 
-const useStyles = makeStyles((theme) => ({
-  avatar: {
-    marginRight: '10px',
-  },
-  dropdown: {
-    display: 'block',
-    position: 'absolute',
-    padding: '15px 0',
-    listStyle: 'none',
-    textDecoration: 'none',
-    boxShadow: '0 5px 5px 0 rgba(0, 0, 0, 0.2)',
-    borderRadius: '3px',
-    lineHeight: '30px',
-  },
-  username: {
-    marginRight: '20px',
-  },
-}));
-
-function UserAvatar({ user }) {
+function UserAvatar({ user, logout }) {
   const { id, name } = user;
 
   const classes = useStyles();
@@ -40,22 +22,22 @@ function UserAvatar({ user }) {
     setOpen(false);
   };
 
+  const onClickLogout = () => {
+    logout();
+  };
+
   return (
     <>
       <ClickAwayListener onClickAway={handleClickAway}>
         <div className={classes.avatar}>
-          <Avatar
-            src={`http://localhost:4000/api/v1/users/${id}/avatar`}
-            alt="user-avatar"
-            onClick={handleClick}
-          />
+          <Avatar src={avatarUrl(id)} alt="user-avatar" onClick={handleClick} />
 
           {open && (
             <ul className={classes.dropdown}>
               <Link to="/profile">
                 <li>Profile</li>
               </Link>
-              <Link to="/login">
+              <Link to="/login" onClick={onClickLogout}>
                 <li>Logout</li>
               </Link>
             </ul>

@@ -2,24 +2,19 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
+import useAuth from '../../hooks/useAuth';
+
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import { useStyles } from './styles';
 
-import { makeStyles } from '@material-ui/styles';
-
-const useStyles = makeStyles((theme) => ({
-  card: {
-    maxWidth: 600,
-    margin: '30px auto 30px auto',
-  },
-}));
-
-function Article({ articleData }) {
+function Article({ articleData, onClickDelete }) {
   const classes = useStyles();
-  const { id, title, text } = articleData;
+  const { id, title, text, user_id } = articleData;
+  const { user } = useAuth();
 
   return (
     <Card key={id} className={classes.card}>
@@ -31,13 +26,18 @@ function Article({ articleData }) {
           {text}
         </Typography>
       </CardContent>
-      <CardActions>
-        <Link to={`/edit-article/${id}`}>
-          <Button variant="outlined" size="small" color="primary">
-            Edit
+      {user_id === user.id && (
+        <CardActions>
+          <Link to={`/edit-article/${id}`}>
+            <Button variant="outlined" size="small" color="primary">
+              Edit
+            </Button>
+          </Link>
+          <Button variant="outlined" size="small" color="primary" onClick={onClickDelete}>
+            Delete
           </Button>
-        </Link>
-      </CardActions>
+        </CardActions>
+      )}
     </Card>
   );
 }

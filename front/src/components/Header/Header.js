@@ -1,37 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-import UserAvatarContainer from './../containers/user/UserAvatar';
+import UserAvatarContainer from '../../containers/user/UserAvatar';
 
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import { makeStyles } from '@material-ui/styles';
-
-const useStyles = makeStyles((theme) => ({
-  toolbarMargin: {
-    ...theme.mixins.toolbar,
-    marginBottom: '3em',
-  },
-  logo: {
-    height: '8em',
-  },
-  logoContainer: {
-    padding: 0,
-    '&:hover': {
-      backgroundColor: 'transparent',
-    },
-  },
-  tabContainer: {
-    margin: 'auto',
-  },
-  tab: {
-    ...theme.typography.tab,
-    minWidth: 10,
-    marginLeft: '25px',
-  },
-}));
+import { useStyles } from './styles';
 
 function Header() {
   const classes = useStyles();

@@ -4,20 +4,17 @@ const { promisify } = require('util');
 const User = require('./../models/user');
 const catchAsync = require('./../errors/catch-async');
 const sendEmail = require('./../services/node-mailer');
+const signTokens = require('./../services/token.service');
 const jwtConfig = require('./../services/config').getAuth().JWT;
 const port = require('./../services/config').getPort();
 
-const signToken = (user) => {
-  return jwt.sign({ id: user.id }, jwtConfig.secret, { expiresIn: jwtConfig.expiresIn });
-};
-
 exports.signUp = catchAsync(async (req, res, next) => {
   const props = { email: req.body.email, password: req.body.password };
-
   const user = await User.create(props);
-  const token = signToken(user);
 
-  const url = `${req.protocol}://localhost:${port}/api/v1/auth/confirmation/${token}`;
+  const tokens = signTokens(user);
+
+  const url = `${req.protocol}://localhost:${port}/api/v1/auth/confirmation/${tokens.refresh.token}`;
 
   try {
     await sendEmail({
@@ -32,47 +29,83 @@ exports.signUp = catchAsync(async (req, res, next) => {
   res.status(201).json({
     status: 'success',
     message: 'Registration successful',
-    token,
     data: {
       user,
     },
+    tokens,
   });
 });
 
 exports.confirmEmail = catchAsync(async (req, res, next) => {
-  const decodedToken = await promisify(jwt.verify)(req.params.token, jwtConfig.secret);
+  const decodedToken = jwt.verify(req.params.token, jwtConfig.secret);
   const currentUser = await User.query().findById(decodedToken.id);
+
   await User.query().patchAndFetchById(currentUser.id, { email_confirmed: true });
 
   res.redirect(`${req.protocol}://localhost:${port}/api/v1/auth/login`);
 });
 
 exports.login = catchAsync(async (req, res, next) => {
-  const { email, password } = req.body;
-  const user = await User.verify(email, password);
+  const verifiedUser = await User.verify(req.body.email, req.body.password);
 
-  const token = signToken(user);
+  const tokens = signTokens(verifiedUser);
+  const updatedUser = await User.query().patchAndFetchById(verifiedUser.id, { token: tokens.refresh.token });
+  const { password, ...user } = updatedUser;
+
   res.status(200).json({
     status: 'success',
-    token,
+    user,
+    tokens,
+  });
+});
+
+exports.logout = catchAsync(async (req, res, next) => {
+  const { refreshToken } = req.body;
+  const decodedToken = jwt.verify(refreshToken, jwtConfig.secret);
+
+  await User.query().patchAndFetchById(decodedToken.id, { token: null });
+
+  res.status(200).json({
+    status: 'success',
+  });
+});
+
+exports.refreshToken = catchAsync(async (req, res, next) => {
+  const { refreshToken } = req.body;
+  const decodedToken = jwt.verify(refreshToken, jwtConfig.secret);
+
+  const userBeforeRefresh = await User.query().findById(decodedToken.id);
+  const tokens = signTokens(userBeforeRefresh);
+  const { password, ...user } = await User.query().patchAndFetchById(userBeforeRefresh.id, {
+    token: tokens.refresh.token,
+  });
+
+  res.status(201).json({
+    message: 'success',
+    user,
+    tokens,
   });
 });
 
 exports.googleOAuth = catchAsync(async (req, res, next) => {
-  const token = await signToken(req.user);
+  const tokens = await signTokens(req.user);
+  const { password, ...user } = await User.query().patchAndFetchById(req.user.id, { token: tokens.refresh.token });
 
   res.status(200).json({
     message: 'google success',
-    token,
+    user,
+    tokens,
   });
 });
 
 exports.facebookOAuth = catchAsync(async (req, res, next) => {
-  const token = await signToken(req.user);
+  const tokens = await signTokens(req.user);
+  const { password, ...user } = await User.query().patchAndFetchById(req.user.id, { token: tokens.refresh.token });
 
   res.status(200).json({
     message: 'facebook success',
-    token,
+    user,
+    tokens,
   });
 });
 
@@ -91,11 +124,3 @@ exports.linkFacebook = catchAsync(async (req, res, next) => {
     message: 'Successfully linked account with Facebook',
   });
 });
-
-exports.profile = (req, res, next) => {
-  res.status(200).json({
-    data: 'profile',
-  });
-};
-
-//TODO create profile route

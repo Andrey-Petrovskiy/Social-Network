@@ -1,9 +1,12 @@
 import React from 'react';
 import { useInfiniteQuery } from 'react-query';
-import { getAllArticles } from './hooks/crud';
+
 import ArticleList from '../../components/ArticleList';
+import ArticleRequests from '../../hooks/articleCrud';
 
 function ArticleListContainer() {
+  const { getAllArticlesRequest } = ArticleRequests();
+
   const {
     data: response,
     isError,
@@ -11,7 +14,7 @@ function ArticleListContainer() {
     hasNextPage,
     isFetching,
     isFetchingNextPage,
-  } = useInfiniteQuery('articles', getAllArticles, {
+  } = useInfiniteQuery('articles', getAllArticlesRequest, {
     getNextPageParam: (lastPage) => lastPage.nextPage,
   });
 

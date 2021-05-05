@@ -10,9 +10,10 @@ const Article = require('./../models/article');
 
 router
   .route('/')
-  .get(/*passportJWT,*/ articleController.getAllArticles)
+  .get(passportJWT, articleController.getAllArticles)
   .post(
-    /*passportJWT,*/ validator({
+    passportJWT,
+    validator({
       title: ['max:50'],
       text: ['required', 'min:1', 'max:2000'],
     }),
@@ -23,24 +24,23 @@ router
   .route('/:id')
   .get(articleController.getArticle)
   .put(
-    /*passportJWT,
+    passportJWT,
     checkPermissions([
       { permission: 'updateAnyPost' },
       { permission: 'updateOwnPost', own: { model: Article, column: 'user_id' } },
-    ]),*/ validator(
-      {
-        title: ['max:50'],
-        text: ['required', 'min:1', 'max:2000'],
-      }
-    ),
+    ]),
+    validator({
+      title: ['max:50'],
+      text: ['required', 'min:1', 'max:2000'],
+    }),
     articleController.updateArticle
   )
   .delete(
-    /*passportJWT,
+    passportJWT,
     checkPermissions([
       { permission: 'deleteAnyPost' },
       { permission: 'deleteOwnPost', own: { model: Article, column: 'user_id' } },
-    ]),*/
+    ]),
     articleController.deleteArticle
   );
 

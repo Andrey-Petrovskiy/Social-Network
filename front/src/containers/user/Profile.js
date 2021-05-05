@@ -1,20 +1,41 @@
 import React, { useCallback } from 'react';
-import { useQuery, useMutation } from 'react-query';
+import { useQuery, useMutation, useQueryClient } from 'react-query';
+import { useHistory } from 'react-router-dom';
 
 import Profile from '../../components/Profile';
-import { getUserById, updateUserRequest, updateAvatarRequest } from './hooks/crud';
 
-function ProfileContainer({ handleUsername }) {
-  const id = 28;
+import UserRequests from '../../hooks/userCrud';
+import useAuth from '../../hooks/useAuth';
 
-  const { data } = useQuery(['users', id], () => getUserById(id), {
+function ProfileContainer() {
+  const history = useHistory();
+  const queryClient = useQueryClient();
+
+  const {
+    user: { id },
+  } = useAuth();
+
+  const { getUserByIdRequest, updateUserRequest, updateAvatarRequest } = UserRequests();
+
+  const { data } = useQuery(['users', id], () => getUserByIdRequest(id), {
     enabled: Boolean(id),
   });
 
-  const user = data?.data.data.user || { name: '', email: '', phone: '', university: '' };
+  const user = data?.data.user || { name: '', email: '', phone: '', university: '' };
 
-  const { mutate: updateUser } = useMutation(updateUserRequest);
-  const { mutate: updateAvatar } = useMutation(updateAvatarRequest);
+  const { mutate: updateUser } = useMutation(updateUserRequest, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('users');
+      history.push('/profile');
+    },
+  });
+
+  const { mutate: updateAvatar } = useMutation(updateAvatarRequest, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('users');
+      history.push('/profile');
+    },
+  });
 
   const onSubmitUpdateUser = useCallback(
     async (formData) => {
