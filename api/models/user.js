@@ -50,21 +50,12 @@ class User extends Model {
   };
 
   static get relationMappings() {
-    const City = require('./city');
     const University = require('./university');
     const Like = require('./like');
     const Article = require('./article');
     const Follower = require('./follower');
 
     return {
-      city: {
-        relation: Model.BelongsToOneRelation,
-        modelClass: City,
-        join: {
-          from: 'users.city_id',
-          to: 'cities.id',
-        },
-      },
       university: {
         relation: Model.BelongsToOneRelation,
         modelClass: University,
@@ -94,7 +85,7 @@ class User extends Model {
         modelClass: Follower,
         join: {
           from: 'users.id',
-          to: 'followers.followed_id',
+          to: 'followers.leader_id',
         },
       },
       userIsFollowing: {

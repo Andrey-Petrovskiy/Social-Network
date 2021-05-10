@@ -6,7 +6,6 @@ class Article extends Model {
   static get relationMappings() {
     const User = require('./user');
     const Like = require('./like');
-    const Tag = require('./tag');
     const ArticleImage = require('./article-image');
     const Comment = require('./comment');
 
@@ -25,18 +24,6 @@ class Article extends Model {
         join: {
           from: 'articles.id',
           to: 'likes.article_id',
-        },
-      },
-      tags: {
-        relation: Model.HasOneThroughRelation,
-        modelClass: Tag,
-        join: {
-          from: 'articles.id',
-          through: {
-            from: 'articles_tags.article_id',
-            to: 'articles_tags.tag_id',
-          },
-          to: 'tags.id',
         },
       },
       images: {

@@ -1,19 +1,26 @@
 import React from 'react';
 import { useQuery } from 'react-query';
 
-import UserAvatar from '../../components/UserAvatar';
-import { getUserById } from './hooks/crud';
+import UserAvatar from '../../components/UserAvatar/UserAvatar';
+
+import UserRequests from '../../hooks/userCrud';
+import useAuth from '../../hooks/useAuth';
 
 function UserAvatarContainer() {
-  const id = 28;
+  const {
+    user: { id },
+    logout,
+  } = useAuth();
 
-  const { data } = useQuery(['users', id], () => getUserById(id), {
+  const { getUserByIdRequest } = UserRequests();
+
+  const { data } = useQuery(['users', id], () => getUserByIdRequest(id), {
     enabled: Boolean(id),
   });
 
-  const user = data?.data.data.user || { id: '', name: '' };
+  const user = data?.data.user || { id: '', name: '' };
 
-  return <UserAvatar user={user} />;
+  return <UserAvatar user={user} logout={logout} />;
 }
 
 export default UserAvatarContainer;

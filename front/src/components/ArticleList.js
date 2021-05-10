@@ -3,16 +3,16 @@ import PropTypes from 'prop-types';
 
 import Button from '@material-ui/core/Button';
 
-import Article from './Article';
+import ArticleContainer from '../containers/articles/Article';
 
-const ArticleList = ({
+function ArticleList({
   pageData,
   isFetching,
   isError,
   isFetchingNextPage,
   fetchNextPage,
   hasNextPage,
-}) => {
+}) {
   return (
     <div>
       {isFetching && !isFetchingNextPage && <div>Loading...</div>}
@@ -20,7 +20,7 @@ const ArticleList = ({
 
       {!isFetching &&
         pageData.map(({ data: { data } }) =>
-          data.map((article) => <Article key={article.id} articleData={article} />)
+          data.map((article) => <ArticleContainer key={article.id} articleData={article} />)
         )}
 
       {hasNextPage && (
@@ -30,7 +30,7 @@ const ArticleList = ({
       )}
     </div>
   );
-};
+}
 
 ArticleList.propTypes = {
   pageData: PropTypes.arrayOf(PropTypes.object).isRequired,

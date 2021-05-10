@@ -25,6 +25,24 @@ const facebookOptions = {
   passReqToCallback: true,
 };
 
+passport.use(
+  new JwtStrategy(jwtOptions, async function (req, payload, done) {
+    try {
+      const user = await User.query().findById(payload.id);
+
+      if (user) {
+        return done(null, user);
+      }
+
+      req.user = user;
+
+      return done(null, false);
+    } catch (err) {
+      done(err, false);
+    }
+  })
+);
+
 const socialAccStrategy = (socialId) => {
   return async (req, accessToken, refreshToken, profile, done) => {
     try {
@@ -56,24 +74,6 @@ const socialAccStrategy = (socialId) => {
     }
   };
 };
-
-passport.use(
-  new JwtStrategy(jwtOptions, async function (req, payload, done) {
-    try {
-      const user = await User.query().findById(payload.id);
-
-      if (user) {
-        return done(null, user);
-      }
-
-      req.user = user;
-
-      return done(null, false);
-    } catch (err) {
-      done(err, false);
-    }
-  })
-);
 
 passport.use('googleToken', new GooglePlusTokenStrategy(googleOptions, socialAccStrategy('google_id')));
 

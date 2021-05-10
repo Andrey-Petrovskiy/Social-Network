@@ -21,7 +21,8 @@ class Config {
     return {
       JWT: {
         secret: process.env.JWT_SECRET,
-        expiresIn: process.env.JWT_EXPIRES_IN,
+        accessExpiresIn: process.env.JWT_ACCESS_EXPIRES_IN,
+        refreshExpiresIn: process.env.JWT_REFRESH_EXPIRES_IN,
       },
       google: {
         clientID: process.env.GOOGLE_CLIENT_ID,

@@ -1,9 +1,5 @@
 exports.up = function (knex) {
   return knex.schema
-    .createTable('cities', (table) => {
-      table.increments();
-      table.string('name');
-    })
     .createTable('universities', (table) => {
       table.increments();
       table.string('name');
@@ -16,19 +12,18 @@ exports.up = function (knex) {
       table.string('password');
       table.string('phone');
       table.date('date_of_birth');
-      table.specificType('avatar', 'bytea');
-      table.enu('role', ['user', 'moderator', 'admin']).defaultTo('user');
+      table.string('avatar_path');
+      table.string('token');
       table.string('google_id');
       table.string('facebook_id');
-      table.integer('city_id').references('id').inTable('cities');
       table.integer('university_id').references('id').inTable('universities');
       table.timestamps(true, true);
     })
     .createTable('followers', (table) => {
-      table.integer('followed_id').references('id').inTable('users').notNullable();
+      table.integer('leader_id').references('id').inTable('users').notNullable();
       table.integer('follower_id').references('id').inTable('users').notNullable();
       table.timestamps(true, true);
-      table.primary(['followed_id', 'follower_id']);
+      table.primary(['leader_id', 'follower_id']);
     })
     .createTable('articles', (table) => {
       table.increments();
@@ -41,17 +36,8 @@ exports.up = function (knex) {
     })
     .createTable('article_images', (table) => {
       table.increments();
-      table.specificType('image', 'bytea').notNullable();
+      table.string('image_path').notNullable();
       table.integer('article_id').references('id').inTable('articles').notNullable();
-    })
-    .createTable('tags', (table) => {
-      table.increments();
-      table.string('name').notNullable();
-    })
-    .createTable('article_tags', (table) => {
-      table.integer('article_id').references('id').inTable('articles').notNullable();
-      table.integer('tag_id').references('id').inTable('tags').notNullable();
-      table.primary(['article_id', 'tag_id']);
     })
     .createTable('likes', (table) => {
       table.integer('article_id').references('id').inTable('articles').notNullable();
@@ -68,7 +54,7 @@ exports.up = function (knex) {
     })
     .createTable('comment_images', (table) => {
       table.increments();
-      table.specificType('image', 'bytea').notNullable();
+      table.string('image_path').notNullable();
       table.integer('comment_id').references('id').inTable('comments').notNullable();
     });
 };

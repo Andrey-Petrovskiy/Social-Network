@@ -5,6 +5,7 @@ require('./../services/passport');
 const authController = require('../controllers/auth-controller');
 const validator = require('./../middlewares/validator');
 const PASSWORD_REQUIREMENTS = ['required', 'min:8', 'max:50'];
+
 const passportJWT = passport.authenticate('jwt', { session: false });
 const passportGoogleAuthenticate = passport.authenticate('googleToken', { session: false });
 const passportGoogleAuthorize = passport.authorize('googleToken', { session: false });
@@ -29,14 +30,18 @@ router.route('/login').post(
   authController.login
 );
 
-router.route('/oauth/google').post(passportGoogleAuthenticate, authController.googleOAuth);
+router.route('/logout').post(passportJWT, authController.logout);
+
+router.route('/refresh-tokens').post(authController.refreshToken);
+
+router
+  .route('/oauth/google')
+  .post(passport.authenticate('googleToken', { session: false }), authController.googleOAuth);
 
 router.route('/oauth/facebook').post(passportFacebookAuthenticate, authController.facebookOAuth);
 
 router.route('/oauth/link/google').post(passportJWT, passportGoogleAuthorize, authController.linkGoogle);
 
 router.route('/oauth/link/facebook').post(passportJWT, passportFacebookAuthorize, authController.linkFacebook);
-
-router.route('/profile').get(passportJWT, authController.profile);
 
 module.exports = router;

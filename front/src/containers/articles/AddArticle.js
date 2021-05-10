@@ -1,24 +1,44 @@
 import React, { useCallback } from 'react';
+import { useQuery, useMutation, useQueryClient } from 'react-query';
+import { useHistory } from 'react-router-dom';
+
 import AddArticle from '../../components/AddArticle';
-import { createArticleRequest, updateArticleRequest, getArticleById } from './hooks/crud';
-import { useQuery, useMutation } from 'react-query';
+import ArticleRequests from '../../hooks/articleCrud';
+import useAuth from '../../hooks/useAuth';
 
 function AddArticleContainer({ props }) {
+  const history = useHistory();
+  const queryClient = useQueryClient();
+
+  const { user } = useAuth();
   const articleId = props.match.params.id;
 
-  const { data } = useQuery(['articles', articleId], () => getArticleById(articleId), {
+  const { getArticleByIdRequest, createArticleRequest, updateArticleRequest } = ArticleRequests();
+
+  const { data } = useQuery(['articles', articleId], () => getArticleByIdRequest(articleId), {
     enabled: Boolean(articleId),
   });
 
-  const article = data?.data.article || { title: '', text: '', visible_to: 'all' };
+  const article = data?.article || { title: '', text: '', visible_to: 'all' };
 
-  const { mutate: createArticle } = useMutation(createArticleRequest);
-  const { mutate: updateArticle } = useMutation(updateArticleRequest);
+  const { mutate: createArticle } = useMutation(createArticleRequest, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('articles');
+      history.push('/');
+    },
+  });
+  const { mutate: updateArticle } = useMutation(updateArticleRequest, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('articles');
+      history.push('/');
+    },
+  });
 
   const onSubmitCreate = useCallback(
     async (formData) => {
       try {
-        await createArticle({ formData });
+        const data = { ...formData, user_id: user.id };
+        await createArticle(data);
       } catch (e) {
         console.log(e);
       }

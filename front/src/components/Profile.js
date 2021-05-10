@@ -7,6 +7,7 @@ import 'cropperjs/dist/cropper.css';
 
 import VisibleTo from './VisibleTo';
 import CustomTextField from './Fields/CustomTextField';
+import { avatarUrl } from '../config/variables';
 
 import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
@@ -66,7 +67,7 @@ function Profile({ user, onSubmitUpdateUser, onSubmitUpdateAvatar }) {
                 id="name"
                 name="name"
                 label="Name"
-                error={touched.name && !!errors.name}
+                error={touched.name && Boolean(errors.name)}
               />
             </Box>
             <Box>
@@ -75,7 +76,7 @@ function Profile({ user, onSubmitUpdateUser, onSubmitUpdateAvatar }) {
                 name="email"
                 label="Email"
                 disabled
-                error={touched.email && !!errors.email}
+                error={touched.email && Boolean(errors.email)}
               />
             </Box>
             <Box>
@@ -83,7 +84,7 @@ function Profile({ user, onSubmitUpdateUser, onSubmitUpdateAvatar }) {
                 id="phone"
                 name="phone"
                 label="Phone"
-                error={touched.phone && !!errors.phone}
+                error={touched.phone && Boolean(errors.phone)}
               />
             </Box>
             <Button variant="contained" color="primary" type="submit">
@@ -95,7 +96,7 @@ function Profile({ user, onSubmitUpdateUser, onSubmitUpdateAvatar }) {
       <div>
         {!image && (
           <div>
-            <img src={`http://localhost:4000/api/v1/users/${id}/avatar`} alt="user-avatar" />
+            <img src={avatarUrl(id)} alt="user-avatar" />
             <Button variant="contained" color="primary" component="label">
               Upload Image
               <input type="file" hidden onChange={handleChange} />
@@ -115,7 +116,7 @@ function Profile({ user, onSubmitUpdateUser, onSubmitUpdateAvatar }) {
               color="primary"
               onClick={() => onSubmitUpdateAvatar({ avatar: croppedImage })}
             >
-              Upload Avatar
+              Set Avatar
             </Button>
           </div>
         )}

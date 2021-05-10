@@ -19,7 +19,7 @@ class Follower extends Model {
         relation: Model.BelongsToOneRelation,
         modelClass: User,
         join: {
-          from: 'followers.followed_id',
+          from: 'followers.leader_id',
           to: 'users.id',
         },
       },

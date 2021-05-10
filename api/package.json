@@ -12,11 +12,14 @@
   "dependencies": {
     "bcrypt": "^5.0.0",
     "cors": "^2.8.5",
+    "dayjs": "^1.10.4",
     "dotenv": "^8.2.0",
     "ejs": "^3.1.6",
     "express": "^4.17.1",
+    "faker": "^5.5.2",
     "jsonwebtoken": "^8.5.1",
     "knex": "^0.21.15",
+    "moment": "^2.29.1",
     "multer": "^1.4.2",
     "nodemailer": "^6.4.17",
     "objection": "^2.2.14",
@@ -24,7 +27,8 @@
     "passport-facebook-token": "^4.0.0",
     "passport-google-plus-token": "^2.1.0",
     "passport-jwt": "^4.0.0",
-    "pg": "^8.5.1"
+    "pg": "^8.5.1",
+    "react-social-login": "^3.4.13"
   },
   "devDependencies": {
     "nodemon": "^2.0.6",
