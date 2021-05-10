@@ -10,8 +10,10 @@ import CardActions from '@material-ui/core/CardActions';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { useStyles } from './styles';
+import { avatarUrl } from '../../config/variables';
+import Avatar from '@material-ui/core/Avatar';
 
-function Article({ articleData, onClickDelete }) {
+function Article({ articleData, onClickDelete, articleAuthor }) {
   const classes = useStyles();
   const { id, title, text, user_id } = articleData;
   const { user } = useAuth();
@@ -19,6 +21,10 @@ function Article({ articleData, onClickDelete }) {
   return (
     <Card key={id} className={classes.card}>
       <CardContent>
+        <div>
+          <Avatar src={avatarUrl(user_id)} alt="user-avatar" />
+          {articleAuthor.name}
+        </div>
         <Typography gutterBottom variant="h5" component="h2">
           {title}
         </Typography>
@@ -49,6 +55,7 @@ Article.propTypes = {
     text: PropTypes.string,
     created_at: PropTypes.string,
   }).isRequired,
+  onClickDelete: PropTypes.func.isRequired,
 };
 
 export default Article;

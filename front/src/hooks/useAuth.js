@@ -63,17 +63,19 @@ function useAuth() {
 
   const socialLogin = useCallback(
     (provider, formData) => {
-      apiClient.post(`/auth/oauth/${provider}`, formData).then((res) => {
-        dispatch({
-          type: 'SET_AUTH',
-          payload: {
-            user: res.data.user,
-            accessToken: res.data.tokens.access,
-            refreshToken: res.data.tokens.refresh,
-          },
+      apiClient
+        .post(`/auth/oauth/${provider}`, { access_token: formData._token.accessToken })
+        .then((res) => {
+          dispatch({
+            type: 'SET_AUTH',
+            payload: {
+              user: res.data.user,
+              accessToken: res.data.tokens.access,
+              refreshToken: res.data.tokens.refresh,
+            },
+          });
+          localStorage.setItem('refreshToken', JSON.stringify(res.data.tokens.refresh));
         });
-        localStorage.setItem('refreshToken', JSON.stringify(res.data.tokens.refresh));
-      });
     },
     [dispatch]
   );

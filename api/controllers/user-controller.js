@@ -1,4 +1,5 @@
 const fs = require('fs');
+const jwt = require('jsonwebtoken');
 const User = require('./../models/user');
 const catchAsync = require('./../errors/catch-async');
 const AppError = require('./../errors/app-error');

@@ -1,6 +1,6 @@
 import useApi from './useApi';
 
-export default function ArticleRequests() {
+export default function useArticleCrud() {
   const { callApi } = useApi();
 
   const getAllArticlesRequest = async ({ pageParam = 0 }) => {
@@ -13,20 +13,20 @@ export default function ArticleRequests() {
     return { data, nextPage };
   };
 
-  const getArticleByIdRequest = async (id) => {
-    return callApi(`/articles/${id}`);
+  const getArticleByIdRequest = (articleId) => {
+    return callApi(`/articles/${articleId}`);
   };
 
-  const createArticleRequest = async (formData) => {
+  const createArticleRequest = (formData) => {
     return callApi('/articles', 'post', formData);
   };
 
-  const updateArticleRequest = async ({ articleId, formData }) => {
+  const updateArticleRequest = ({ articleId, formData }) => {
     return callApi(`/articles/${articleId}`, 'put', formData);
   };
 
-  const deleteArticleRequest = async (id) => {
-    return callApi(`/articles/${id}`, 'delete');
+  const deleteArticleRequest = (articleId) => {
+    return callApi(`/articles/${articleId}`, 'delete');
   };
 
   return {

@@ -5,7 +5,7 @@ import * as Yup from 'yup';
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
 
-import VisibleTo from './VisibleTo';
+/*import VisibleTo from './VisibleTo';*/
 import CustomTextField from './Fields/CustomTextField';
 import { avatarUrl } from '../config/variables';
 
