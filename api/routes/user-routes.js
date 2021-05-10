@@ -37,7 +37,7 @@ router
 
 router
   .route('/:id/avatar')
-  .get(passportJWT, userController.getAvatar)
-  .put(passportJWT, /*upload.single('avatar'), */ userController.updateAvatar);
+  .get(/*passportJWT,*/ userController.getAvatar)
+  .put(/*passportJWT,*/ /*upload.single('avatar'), */ userController.updateAvatar);
 
 module.exports = router;

@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from 'react-query';
 import { useHistory } from 'react-router-dom';
 
 import AddArticle from '../../components/AddArticle';
-import ArticleRequests from '../../hooks/articleCrud';
+import useArticleCrud from '../../hooks/useArticleCrud';
 import useAuth from '../../hooks/useAuth';
 
 function AddArticleContainer({ props }) {
@@ -13,7 +13,7 @@ function AddArticleContainer({ props }) {
   const { user } = useAuth();
   const articleId = props.match.params.id;
 
-  const { getArticleByIdRequest, createArticleRequest, updateArticleRequest } = ArticleRequests();
+  const { getArticleByIdRequest, createArticleRequest, updateArticleRequest } = useArticleCrud();
 
   const { data } = useQuery(['articles', articleId], () => getArticleByIdRequest(articleId), {
     enabled: Boolean(articleId),
@@ -43,7 +43,7 @@ function AddArticleContainer({ props }) {
         console.log(e);
       }
     },
-    [createArticle]
+    [createArticle, user.id]
   );
 
   const onSubmitEdit = useCallback(

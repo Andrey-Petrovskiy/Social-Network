@@ -9,13 +9,12 @@ const filePropType = PropTypes.shape({
 
 const userPropType = PropTypes.shape({
   id: PropTypes.number,
-  firstName: PropTypes.string,
-  lastName: PropTypes.string,
-  age: PropTypes.number,
-  avatar: PropTypes.shape({
-    fileId: PropTypes.number,
-    file: filePropType,
-  }),
+  name: PropTypes.string,
+  email: PropTypes.string,
+  email_confirmed: PropTypes.bool,
+  phone: PropTypes.string,
+  date_of_birth: PropTypes.string,
+  avatar: PropTypes.string,
 });
 
 const likePropType = PropTypes.shape({

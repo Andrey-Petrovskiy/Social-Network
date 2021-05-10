@@ -34,9 +34,7 @@ router.route('/logout').post(passportJWT, authController.logout);
 
 router.route('/refresh-tokens').post(authController.refreshToken);
 
-router
-  .route('/oauth/google')
-  .post(passport.authenticate('googleToken', { session: false }), authController.googleOAuth);
+router.route('/oauth/google').post(passportGoogleAuthenticate, authController.googleOAuth);
 
 router.route('/oauth/facebook').post(passportFacebookAuthenticate, authController.facebookOAuth);
 

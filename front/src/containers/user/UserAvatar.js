@@ -3,7 +3,7 @@ import { useQuery } from 'react-query';
 
 import UserAvatar from '../../components/UserAvatar/UserAvatar';
 
-import UserRequests from '../../hooks/userCrud';
+import useUserCrud from '../../hooks/useUserCrud';
 import useAuth from '../../hooks/useAuth';
 
 function UserAvatarContainer() {
@@ -12,7 +12,7 @@ function UserAvatarContainer() {
     logout,
   } = useAuth();
 
-  const { getUserByIdRequest } = UserRequests();
+  const { getUserByIdRequest } = useUserCrud();
 
   const { data } = useQuery(['users', id], () => getUserByIdRequest(id), {
     enabled: Boolean(id),

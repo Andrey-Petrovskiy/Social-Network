@@ -50,7 +50,7 @@ exports.login = catchAsync(async (req, res, next) => {
 
   const tokens = signTokens(verifiedUser);
   const updatedUser = await User.query().patchAndFetchById(verifiedUser.id, { token: tokens.refresh.token });
-  const { password, ...user } = updatedUser;
+  const { password, created_at, updated_at, ...user } = updatedUser;
 
   res.status(200).json({
     status: 'success',

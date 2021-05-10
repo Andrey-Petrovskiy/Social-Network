@@ -2,10 +2,10 @@ import React from 'react';
 import { useInfiniteQuery } from 'react-query';
 
 import ArticleList from '../../components/ArticleList';
-import ArticleRequests from '../../hooks/articleCrud';
+import useArticleCrud from '../../hooks/useArticleCrud';
 
 function ArticleListContainer() {
-  const { getAllArticlesRequest } = ArticleRequests();
+  const { getAllArticlesRequest } = useArticleCrud();
 
   const {
     data: response,

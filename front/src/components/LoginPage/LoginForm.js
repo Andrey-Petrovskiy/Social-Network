@@ -16,6 +16,9 @@ const LoginSchema = Yup.object().shape({
 });
 
 function LoginForm() {
+  const googleAppId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+  const facebookAppId = process.env.REACT_APP_FACEBOOK_CLIENT_ID;
+
   const { login, socialLogin } = useAuth();
 
   const handleGoogleLogin = (data) => socialLogin('google', data);
@@ -66,8 +69,7 @@ function LoginForm() {
       <div>
         <SocialButton
           provider="google"
-          /*appId={process.env.REACT_APP_GOOGLE_CLIENT_ID}*/
-          appId="982718515675-77o8mecnrrh13at7rpu2hngf7a5r9hom.apps.googleusercontent.com"
+          appId={googleAppId}
           onLoginSuccess={handleGoogleLogin}
           onLoginFailure={handleSocialLoginFailure}
           variant="contained"
@@ -77,7 +79,7 @@ function LoginForm() {
         </SocialButton>
         <SocialButton
           provider="facebook"
-          appId={process.env.REACT_APP_FACEBOOK_CLIENT_ID}
+          appId={facebookAppId}
           onLoginSuccess={handleFacebookLogin}
           onLoginFailure={handleSocialLoginFailure}
           variant="contained"
